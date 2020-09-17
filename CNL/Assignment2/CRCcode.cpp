@@ -20,7 +20,7 @@ void division(int temp[], int gen[], int n, int r)
 int main()
 {
 	int n, r, message[50], gen[50], temp[50];
-	cout << "At Sender's End " << endl;
+	cout << "-------SENDER-------" << endl;
 	cout << "Enter the number of message bits : ";
 	cin >> n;
 	cout << "Enter the number of generator bits : ";
@@ -43,10 +43,10 @@ int main()
 		cout << temp[n + i] << " ";
 		message[n + i] = temp[n + i];
 	}
-	cout << endl << "Transmitted Message : ";
+	cout << endl << "Message Transmitted : ";
 	for (int i = 0; i < n + r; i++)
 		cout << message[i] << " ";
-	cout << endl << endl << "At Receiver's End " << endl;
+	cout << endl << endl << "------RECEIVER------ " << endl;
 	cout << "Enter the received message : ";
 	for (int i = 0; i < n + r; i++)
 		cin >> message[i];
