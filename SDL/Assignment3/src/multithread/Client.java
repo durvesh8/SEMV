@@ -27,51 +27,7 @@ public class Client {
                         String passwordresponse = reader.readLine();
                         if (passwordresponse.equals("0"))
                             System.out.println("Incorrect Password");
-                        else if (passwordresponse.equals("420")) {
-                            System.out.println("You're logged in as admin.");
-                            String adminresp = "";
-                            while (!adminresp.equals("4")) {
-                                System.out.println("Choose what to do:-\n1.Add a movie\t2.Remove a movie\t3.Remove a user\t4.Log out");
-                                adminresp = keyboard.readLine();
-                                switch (adminresp) {
-                                    case "1":
-                                        out.println("1");
-                                        System.out.print("Enter the movie name: ");
-                                        out.println(keyboard.readLine());
-                                        System.out.print("Enter the genre: ");
-                                        out.println(keyboard.readLine());
-                                        String servresp = "";
-                                        servresp = reader.readLine();
-                                        if (servresp.equals("0")) {
-                                            System.out.println("---Movie Already Exists---");
-                                        } else if(servresp.equals("1")) {
-                                            System.out.println("---Movie Added---");
-                                        }
-                                        break;
-                                    case "2":
-                                        out.println("2");
-                                        System.out.print("Enter the name of the movie to be deleted: ");
-                                        out.println(keyboard.readLine());
-                                        String serv = reader.readLine();
-                                        if (serv.equals("0")) {
-                                            System.out.println("---Movie Doesn't exist---");
-                                        } else {
-                                            System.out.println("---Movie Deleted---");
-                                        }
-                                        break;
-                                    case "3":
-                                        out.println("3");
-                                        System.out.print("Enter the username of the user to be deleted: ");
-                                        out.println(keyboard.readLine());
-                                        String srvrusr = reader.readLine();
-                                        if (srvrusr.equals("0")) System.out.println("----User Doesn't Exist----");
-                                        else System.out.println("----User Deleted----");
-                                        break;
-                                    case "4":
-                                        break;
-                                }
-                            }
-                        } else {
+                        else {
                             System.out.println("Logged In Successfully");
                             String loginchoice;
                             label:
