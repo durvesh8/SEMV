@@ -9,10 +9,12 @@ public class Client {
         BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-        String choice = "0";
+        String choice;
         do {
+
             System.out.println("-----WELCOME-----\n1.Login\t\t2.Sign Up\t\t911.Close the Socket");
             choice = keyboard.readLine();
+            label:
             switch (choice) {
                 case "1":
                     out.println(1);
@@ -30,7 +32,6 @@ public class Client {
                         else {
                             System.out.println("Logged In Successfully");
                             String loginchoice;
-                            label:
                             while (true) {
                                 System.out.println("\n1. A new movie recommendation.\t\t2. A rewatch recommendation\t\t3.Sign out and exit");
                                 loginchoice = keyboard.readLine();
@@ -41,8 +42,8 @@ public class Client {
                                         break label;
                                     case "2":
                                         out.println("2");
-                                        String rewatch = "";
-                                        String rewatchchoice = "";
+                                        String rewatch;
+                                        String rewatchchoice;
                                         while (true) {
                                             rewatch = reader.readLine();
                                             if (rewatch.equals("404")) {
@@ -62,8 +63,8 @@ public class Client {
                                         break;
                                     case "1":
                                         out.println("1");
-                                        String recomm = "";
-                                        String recommchoice = "";
+                                        String recomm;
+                                        String recommchoice;
                                         while (true) {
                                             recomm = reader.readLine();
                                             if (recomm.equals("404")) {
