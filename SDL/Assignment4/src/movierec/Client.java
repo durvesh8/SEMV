@@ -12,14 +12,14 @@ public class Client {
     JLabel label1;
     JPanel panel;
     JButton signUp,login,exit;
-    JLabel backg,suerrormessage;
-    JTextArea suusernamefield;
-    JPasswordField supasswordfield;
+    JLabel backg,suerrormessage,lierrormessage;
+    JTextArea suusernamefield,liusernamefield;
+    JPasswordField supasswordfield,lipasswordfield;
     ActionListener actionListenersignup;
     BufferedReader keyboard;
     BufferedReader reader;
     PrintWriter out;
-    JFrame signuppage;
+    JFrame signuppage,loginpage;
 
     public Client() {
         try {
@@ -92,12 +92,13 @@ public class Client {
                     suerrormessage = new JLabel(":)");
                     suerrormessage.setForeground(Color.red);
                     suerrormessage.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-                    suerrormessage.setBounds(765, 200, 100, 30);
+                    suerrormessage.setBounds(700, 200, 300, 30);
                     suusernamefield = new JTextArea();
                     supasswordfield = new JPasswordField();
                     suusernamefield.setBounds(700, 300, 200, 20);
                     supasswordfield.setBounds(700, 400, 200, 20);
-                    signupbutton.addActionListener(actionListenersignup);
+                    ActionListener signupbuttonactionlistener = signup();
+                    signupbutton.addActionListener(signupbuttonactionlistener);
 
                     signuppanel.add(sign_up);
                     signuppanel.add(signupbutton);
@@ -114,7 +115,8 @@ public class Client {
             login.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                    out.println(1);
+                    loginpage = getloginframe();
                 }
             });
             exit.addActionListener(new ActionListener() {
@@ -257,11 +259,10 @@ public class Client {
 
     }
 
-    public void signup() {
+    public ActionListener signup() {
         actionListenersignup = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                while(true) {
                     String username = suusernamefield.getText();
                     String password = supasswordfield.getText();
                     out.println(username);
@@ -275,13 +276,73 @@ public class Client {
                             suerrormessage.setFont(new Font("successfull", Font.BOLD, 15));
                             suerrormessage.setText("Account Created Successfully!!");
                             signuppage.setVisible(false);
-                            break;
                         }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
                 }
+        };
+        return actionListenersignup;
+    }
+    public JFrame getloginframe(){
+        JFrame loginframe = new JFrame();
+        homescreen.dispose();
+        loginframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loginframe.setResizable(true);
+        loginframe.setPreferredSize(new Dimension(1540, 825));
+        loginframe.setTitle("Sign Up");
+        JPanel loginpanel = new JPanel();
+        loginpanel.setLayout(null);
+        loginpanel.setBackground(Color.DARK_GRAY);
+        JButton loginbutton = new JButton("Sign Up");
+        loginbutton.setBounds(720, 600, 100, 50);
+        loginbutton.setBackground(Color.orange);
+        JLabel liusername = new JLabel("Username:");
+        liusername.setFont(new Font("username", Font.BOLD, 15));
+        liusername.setBounds(600, 300, 100, 15);
+        liusername.setForeground(Color.lightGray);
+        JLabel lipassword = new JLabel("Password:");
+        lipassword.setFont(new Font("password", Font.BOLD, 15));
+        lipassword.setBounds(600, 400, 100, 15);
+        lipassword.setForeground(Color.lightGray);
+        JLabel log_in = new JLabel("Enter Details to register");
+        log_in.setFont(new Font("login", Font.PLAIN, 50));
+        log_in.setBounds(515, 150, 650, 60);
+        log_in.setForeground(Color.lightGray);
+        lierrormessage = new JLabel(":)");
+        lierrormessage.setForeground(Color.red);
+        lierrormessage.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        lierrormessage.setBounds(700, 200, 300, 30);
+        liusernamefield = new JTextArea();
+        lipasswordfield = new JPasswordField();
+        liusernamefield.setBounds(700, 300, 200, 20);
+        lipasswordfield.setBounds(700, 400, 200, 20);
+        ActionListener loginbuttonactionlistener = login();
+        loginbutton.addActionListener(loginbuttonactionlistener);
+
+        loginpanel.add(log_in);
+        loginpanel.add(loginbutton);
+        loginpanel.add(lierrormessage);
+        loginpanel.add(liusername);
+        loginpanel.add(lipassword);
+        loginpanel.add(lipasswordfield);
+        loginpanel.add(liusernamefield);
+        loginframe.add(loginpanel);
+        loginframe.pack();
+        loginframe.setVisible(true);
+
+        return loginframe;
+    }
+    public void initscreen(){
+
+    }
+    public ActionListener login(){
+        ActionListener loginal = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         };
+        return loginal;
     }
 }
