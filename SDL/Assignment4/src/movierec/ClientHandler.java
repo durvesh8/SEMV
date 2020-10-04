@@ -76,8 +76,6 @@ public class ClientHandler implements Runnable {
                                     } else if (clientresp.equals("x")) {
                                         stmt.executeUpdate("ALTER TABLE movietable drop column " + username + ";");
                                         break;
-                                    } else if (clientresp.equals("4")) {
-                                        continue;
                                     }
                                     // Rewatch Case
                                     else if (clientresp.equals("2")) {
@@ -86,16 +84,16 @@ public class ClientHandler implements Runnable {
                                             movieswatched.add(rs.getString(1));
                                         }
                                         String randomMovie;
-                                        String clientres;
-                                        while (!movieswatched.isEmpty()) {
+
+
+                                        if (movieswatched.isEmpty()) out.println("404");
+                                        else {
+                                            out.println("1");
                                             int index = new Random().nextInt(movieswatched.size());
                                             randomMovie = movieswatched.get(index);
                                             out.println(randomMovie);
-                                            clientres = in.readLine();
-                                            if (clientres.equals("1")) break;
                                             movieswatched.remove(index);
                                         }
-                                        if (movieswatched.isEmpty()) out.println("404");
                                     }
                                     // New Recommendation Case
                                     else {
@@ -104,21 +102,17 @@ public class ClientHandler implements Runnable {
                                             moviesnotwatched.add(rs.getString(1));
                                         }
                                         String randomMovie = "";
-                                        String clientres;
-                                        int flag = 0;
-                                        while (!moviesnotwatched.isEmpty()) {
+
+                                        if (moviesnotwatched.isEmpty()) out.println("404");
+                                        else {
+out.println("1");
                                             int index = new Random().nextInt(moviesnotwatched.size());
                                             randomMovie = moviesnotwatched.get(index);
                                             out.println(randomMovie);
-                                            clientres = in.readLine();
-                                            if (clientres.equals("1")) {
-                                                flag = 1;
-                                                break;
-                                            }
+
                                             moviesnotwatched.remove(index);
-                                        }
-                                        if (moviesnotwatched.isEmpty()) out.println("404");
-                                        if (flag == 1) {
+
+
                                             stmt.executeUpdate("UPDATE movietable set " + username + "=\"Y\" where MovieName=\"" + randomMovie + "\"");
                                         }
                                     }

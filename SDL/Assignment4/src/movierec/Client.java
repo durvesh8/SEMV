@@ -14,7 +14,7 @@ public class Client {
     JLabel label1,backg,suerrormessage,lierrormessage,newrecommendation,rewatchrecommendation;
     JTextArea suusernamefield,liusernamefield;
     JPasswordField supasswordfield,lipasswordfield;
-    ActionListener actionListenersignup,actionListenerlogin,rewatchal,newrecal,signoutal;
+    ActionListener actionListenersignup,actionListenerlogin,rewatchal,newrecal,signoutal,deleteaccal;
     BufferedReader keyboard,reader;
     PrintWriter out;
 
@@ -387,32 +387,62 @@ public class Client {
         JButton newrecbutton  = new JButton("New Recommendation");
         newrecbutton.setBounds(300, 200, 200, 50);
         newrecbutton.setBackground(Color.orange);
-        JLabel newrecommendation = new JLabel("");
+        newrecommendation = new JLabel("");
         newrecommendation.setFont(new Font("new reco.", Font.BOLD, 15));
         newrecommendation.setBounds(600, 200, 700, 20);
         newrecommendation.setForeground(Color.lightGray);
         JButton rewatchbutton  = new JButton("Rewatch recommendation");
         rewatchbutton.setBounds(300, 300, 200, 50);
         rewatchbutton.setBackground(Color.orange);
-        JLabel rewatchrecommendation = new JLabel("");
+        rewatchrecommendation = new JLabel("");
         rewatchrecommendation.setFont(new Font("rewatch reco.", Font.BOLD, 15));
-        rewatchrecommendation.setBounds(600, 300, 100, 15);
+        rewatchrecommendation.setBounds(600, 300, 700, 15);
         rewatchrecommendation.setForeground(Color.lightGray);
+        JButton signout  = new JButton("Sign Out");
+        signout.setBounds(1300, 10, 200, 50);
+        signout.setBackground(Color.WHITE);
+        JButton deleteacc  = new JButton("Delete Account");
+        deleteacc.setBounds(1300, 600, 200, 50);
+        deleteacc.setBackground(Color.RED);
+
+        rewatchal = rewatch();
+        rewatchbutton.addActionListener(rewatchal);
+        newrecal = newrecommend();
+        newrecbutton.addActionListener(newrecal);
+        signoutal = signout();
+        signout.addActionListener(signoutal);
+        deleteaccal = deleteacc();
+        deleteacc.addActionListener(deleteaccal);
+
+
         recpanel.add(title);
         recpanel.add(newrecbutton);
+        recpanel.add(signout);
         recpanel.add(rewatchrecommendation);
         recpanel.add(rewatchbutton);
         recpanel.add(newrecommendation);
+        recpanel.add(deleteacc);
         recframe.add(recpanel);
         recframe.pack();
-
         return recframe;
     }
     public ActionListener newrecommend(){
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                out.println("1");
+                try {
+                    String statusrec = reader.readLine();
+                    if(statusrec.equals("404")){
+                        newrecommendation.setText("We're out of movies :(");
+                    }
+                    else {
+                        String movierec = reader.readLine();
+                        newrecommendation.setText(movierec);
+                    }
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
         };
     }
@@ -420,15 +450,39 @@ public class Client {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                out.println("2");
+                try {
+                    String statusrew = reader.readLine();
+                    if(statusrew.equals("404")){
+                        rewatchrecommendation.setText("You haven't watched anything.");
+                    }
+                    else {
+                        String rewrec = reader.readLine();
+                        rewatchrecommendation.setText(rewrec);
+                    }
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
         };
     }
-    public ActionListener singout(){
+    public ActionListener signout(){
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                out.println("3");
+                recommendationpage.dispose();
+                System.exit(0);
+            }
+        };
+    }
+    public ActionListener deleteacc(){
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                out.println("x");
+                recommendationpage.dispose();
+                System.exit(0);
             }
         };
     }
