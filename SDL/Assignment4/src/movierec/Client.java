@@ -8,18 +8,15 @@ import java.io.*;
 import java.net.Socket;
 
 public class Client {
-    JFrame homescreen;
-    JLabel label1;
+    JFrame homescreen,signuppage,loginpage,recommendationpage;
     JPanel panel;
     JButton signUp,login,exit;
-    JLabel backg,suerrormessage,lierrormessage;
+    JLabel label1,backg,suerrormessage,lierrormessage,newrecommendation,rewatchrecommendation;
     JTextArea suusernamefield,liusernamefield;
     JPasswordField supasswordfield,lipasswordfield;
-    ActionListener actionListenersignup;
-    BufferedReader keyboard;
-    BufferedReader reader;
+    ActionListener actionListenersignup,actionListenerlogin,rewatchal,newrecal,signoutal;
+    BufferedReader keyboard,reader;
     PrintWriter out;
-    JFrame signuppage,loginpage;
 
     public Client() {
         try {
@@ -89,9 +86,9 @@ public class Client {
                     sign_up.setFont(new Font("signup", Font.PLAIN, 50));
                     sign_up.setBounds(515, 150, 650, 60);
                     sign_up.setForeground(Color.lightGray);
-                    suerrormessage = new JLabel(":)");
+                    suerrormessage = new JLabel("");
                     suerrormessage.setForeground(Color.red);
-                    suerrormessage.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+                    suerrormessage.setFont(new Font("Error Message", Font.PLAIN, 15));
                     suerrormessage.setBounds(700, 200, 300, 30);
                     suusernamefield = new JTextArea();
                     supasswordfield = new JPasswordField();
@@ -117,12 +114,15 @@ public class Client {
                 public void actionPerformed(ActionEvent e) {
                     out.println(1);
                     loginpage = getloginframe();
+                    loginpage.setVisible(true);
+
                 }
             });
             exit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
+                    homescreen.setVisible(false);
+                    System.exit(0);
                 }
             });
         }
@@ -258,43 +258,17 @@ public class Client {
 //        socket.close();
 
     }
-
-    public ActionListener signup() {
-        actionListenersignup = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                    String username = suusernamefield.getText();
-                    String password = supasswordfield.getText();
-                    out.println(username);
-                    out.println(password);
-
-                    try {
-                        String serverresp = reader.readLine();
-                        if (serverresp.equals("0")) {
-                            suerrormessage.setText("Username Already Exists!");
-                        } else {
-                            suerrormessage.setFont(new Font("successfull", Font.BOLD, 15));
-                            suerrormessage.setText("Account Created Successfully!!");
-                            signuppage.setVisible(false);
-                        }
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-                }
-        };
-        return actionListenersignup;
-    }
     public JFrame getloginframe(){
         JFrame loginframe = new JFrame();
         homescreen.dispose();
         loginframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginframe.setResizable(true);
         loginframe.setPreferredSize(new Dimension(1540, 825));
-        loginframe.setTitle("Sign Up");
+        loginframe.setTitle("LoginPage");
         JPanel loginpanel = new JPanel();
         loginpanel.setLayout(null);
         loginpanel.setBackground(Color.DARK_GRAY);
-        JButton loginbutton = new JButton("Sign Up");
+        JButton loginbutton = new JButton("Login");
         loginbutton.setBounds(720, 600, 100, 50);
         loginbutton.setBackground(Color.orange);
         JLabel liusername = new JLabel("Username:");
@@ -305,11 +279,11 @@ public class Client {
         lipassword.setFont(new Font("password", Font.BOLD, 15));
         lipassword.setBounds(600, 400, 100, 15);
         lipassword.setForeground(Color.lightGray);
-        JLabel log_in = new JLabel("Enter Details to register");
+        JLabel log_in = new JLabel("Enter your credentials");
         log_in.setFont(new Font("login", Font.PLAIN, 50));
         log_in.setBounds(515, 150, 650, 60);
         log_in.setForeground(Color.lightGray);
-        lierrormessage = new JLabel(":)");
+        lierrormessage = new JLabel("");
         lierrormessage.setForeground(Color.red);
         lierrormessage.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
         lierrormessage.setBounds(700, 200, 300, 30);
@@ -329,20 +303,133 @@ public class Client {
         loginpanel.add(liusernamefield);
         loginframe.add(loginpanel);
         loginframe.pack();
-        loginframe.setVisible(true);
 
         return loginframe;
     }
+    public ActionListener signup() {
+        actionListenersignup = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    String username = suusernamefield.getText();
+                    String password = supasswordfield.getText();
+                    out.println(username);
+                    out.println(password);
+
+                    try {
+                        String serverresp = reader.readLine();
+                        if (serverresp.equals("0")) {
+                            // Existing user condition
+                            suerrormessage.setBounds(700, 200, 300, 30);
+                            suerrormessage.setText("Username Already Exists!");
+                        } else {
+                            // Account will be created successfully here
+                            signuppage.dispose();
+                            homescreen.setVisible(true);
+                        }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+                }
+        };
+        return actionListenersignup;
+    }
+
     public void initscreen(){
 
     }
     public ActionListener login(){
-        ActionListener loginal = new ActionListener() {
+
+        actionListenerlogin = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String usernamelogin = liusernamefield.getText();
+                String passwordlogin = lipasswordfield.getText();
+                out.println(usernamelogin);
+                out.println(passwordlogin);
+
+                try {
+                    String serverresplogin = reader.readLine();
+                    if (serverresplogin.equals("0")) {
+                        lierrormessage.setText("Username Doesn't Exist!");
+                    } else {
+                        String serverresplog = reader.readLine();
+                        if(serverresplog.equals("0")){
+                            lierrormessage.setText("Incorrect Password");
+                        }
+                        else{
+                            // Successful login
+                            loginpage.setVisible(false);
+                            recommendationpage = getrecommendationframe();
+                            recommendationpage.setVisible(true);
+                        }
+
+                    }
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        };
+        return actionListenerlogin;
+    }
+    public JFrame getrecommendationframe(){
+        JFrame recframe = new JFrame();
+        recframe.setPreferredSize(new Dimension(1540, 825));
+        recframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        recframe.setResizable(true);
+        recframe.setTitle("LoginPage");
+        JPanel recpanel = new JPanel();
+        recpanel.setLayout(null);
+        recpanel.setBackground(Color.DARK_GRAY);
+        JLabel title = new JLabel("Click on the desired button");
+        title.setBounds(600,50,900,50);
+        title.setFont(new Font("title", Font.ITALIC,30));
+        title.setForeground(Color.lightGray);
+        JButton newrecbutton  = new JButton("New Recommendation");
+        newrecbutton.setBounds(300, 200, 200, 50);
+        newrecbutton.setBackground(Color.orange);
+        JLabel newrecommendation = new JLabel("");
+        newrecommendation.setFont(new Font("new reco.", Font.BOLD, 15));
+        newrecommendation.setBounds(600, 200, 700, 20);
+        newrecommendation.setForeground(Color.lightGray);
+        JButton rewatchbutton  = new JButton("Rewatch recommendation");
+        rewatchbutton.setBounds(300, 300, 200, 50);
+        rewatchbutton.setBackground(Color.orange);
+        JLabel rewatchrecommendation = new JLabel("");
+        rewatchrecommendation.setFont(new Font("rewatch reco.", Font.BOLD, 15));
+        rewatchrecommendation.setBounds(600, 300, 100, 15);
+        rewatchrecommendation.setForeground(Color.lightGray);
+        recpanel.add(title);
+        recpanel.add(newrecbutton);
+        recpanel.add(rewatchrecommendation);
+        recpanel.add(rewatchbutton);
+        recpanel.add(newrecommendation);
+        recframe.add(recpanel);
+        recframe.pack();
+
+        return recframe;
+    }
+    public ActionListener newrecommend(){
+        return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
             }
         };
-        return loginal;
+    }
+    public ActionListener rewatch(){
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        };
+    }
+    public ActionListener singout(){
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        };
     }
 }

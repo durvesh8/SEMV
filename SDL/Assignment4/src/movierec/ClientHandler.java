@@ -49,85 +49,87 @@ public class ClientHandler implements Runnable {
                 }
                 // Log In request
                 if (request.equals("1")) {
-                    String username = in.readLine();
-                    String password = in.readLine();
-                    // Check if username exists
-                    contain = usernames.contains(username);
-                    if (contain) {
-                        // Username existed. check for password
-                        out.println("1");
-                        rs = stmt.executeQuery("SELECT password FROM users WHERE username=\"" + username + "\";");
-                        rs.next();
-                        passeq = password.equals(rs.getString(1));
-                        if (!passeq) {
-                            // Password didn't match
-                            out.println("0");
-                        } else {
-                            // Password matched
+                    while(true) {
+                        String username = in.readLine();
+                        String password = in.readLine();
+                        // Check if username exists
+                        contain = usernames.contains(username);
+                        if (contain) {
+                            // Username existed. check for password
                             out.println("1");
+                            rs = stmt.executeQuery("SELECT password FROM users WHERE username=\"" + username + "\";");
+                            rs.next();
+                            passeq = password.equals(rs.getString(1));
+                            if (!passeq) {
+                                // Password didn't match
+                                out.println("0");
+                            } else {
+                                // Password matched
+                                out.println("1");
 
-                            while (true) {
-                                String clientresp;
-                                clientresp = in.readLine();
-                                // Sign out case
-                                if (clientresp.equals("3")) {
-                                    break;
-                                } else if (clientresp.equals("x")) {
-                                    stmt.executeUpdate("ALTER TABLE movietable drop column " + username + ";");
-                                    break;
-                                } else if (clientresp.equals("4")) {
-                                    continue;
-                                }
-                                // Rewatch Case
-                                else if (clientresp.equals("2")) {
-                                    rs = stmt.executeQuery("SELECT MovieName FROM movietable WHERE " + username + "=\"Y\";");
-                                    while (rs.next()) {
-                                        movieswatched.add(rs.getString(1));
+                                while (true) {
+                                    String clientresp;
+                                    clientresp = in.readLine();
+                                    // Sign out case
+                                    if (clientresp.equals("3")) {
+                                        break;
+                                    } else if (clientresp.equals("x")) {
+                                        stmt.executeUpdate("ALTER TABLE movietable drop column " + username + ";");
+                                        break;
+                                    } else if (clientresp.equals("4")) {
+                                        continue;
                                     }
-                                    String randomMovie;
-                                    String clientres;
-                                    while (!movieswatched.isEmpty()) {
-                                        int index = new Random().nextInt(movieswatched.size());
-                                        randomMovie = movieswatched.get(index);
-                                        out.println(randomMovie);
-                                        clientres = in.readLine();
-                                        if (clientres.equals("1")) break;
-                                        movieswatched.remove(index);
-                                    }
-                                    if (movieswatched.isEmpty()) out.println("404");
-                                }
-                                // New Recommendation Case
-                                else {
-                                    rs = stmt.executeQuery("SELECT MovieName FROM movietable WHERE " + username + "=\"N\";");
-                                    while (rs.next()) {
-                                        moviesnotwatched.add(rs.getString(1));
-                                    }
-                                    String randomMovie = "";
-                                    String clientres;
-                                    int flag = 0;
-                                    while (!moviesnotwatched.isEmpty()) {
-                                        int index = new Random().nextInt(moviesnotwatched.size());
-                                        randomMovie = moviesnotwatched.get(index);
-                                        out.println(randomMovie);
-                                        clientres = in.readLine();
-                                        if (clientres.equals("1")) {
-                                            flag = 1;
-                                            break;
+                                    // Rewatch Case
+                                    else if (clientresp.equals("2")) {
+                                        rs = stmt.executeQuery("SELECT MovieName FROM movietable WHERE " + username + "=\"Y\";");
+                                        while (rs.next()) {
+                                            movieswatched.add(rs.getString(1));
                                         }
-                                        moviesnotwatched.remove(index);
+                                        String randomMovie;
+                                        String clientres;
+                                        while (!movieswatched.isEmpty()) {
+                                            int index = new Random().nextInt(movieswatched.size());
+                                            randomMovie = movieswatched.get(index);
+                                            out.println(randomMovie);
+                                            clientres = in.readLine();
+                                            if (clientres.equals("1")) break;
+                                            movieswatched.remove(index);
+                                        }
+                                        if (movieswatched.isEmpty()) out.println("404");
                                     }
-                                    if (moviesnotwatched.isEmpty()) out.println("404");
-                                    if (flag == 1) {
-                                        stmt.executeUpdate("UPDATE movietable set " + username + "=\"Y\" where MovieName=\"" + randomMovie + "\"");
+                                    // New Recommendation Case
+                                    else {
+                                        rs = stmt.executeQuery("SELECT MovieName FROM movietable WHERE " + username + "=\"N\";");
+                                        while (rs.next()) {
+                                            moviesnotwatched.add(rs.getString(1));
+                                        }
+                                        String randomMovie = "";
+                                        String clientres;
+                                        int flag = 0;
+                                        while (!moviesnotwatched.isEmpty()) {
+                                            int index = new Random().nextInt(moviesnotwatched.size());
+                                            randomMovie = moviesnotwatched.get(index);
+                                            out.println(randomMovie);
+                                            clientres = in.readLine();
+                                            if (clientres.equals("1")) {
+                                                flag = 1;
+                                                break;
+                                            }
+                                            moviesnotwatched.remove(index);
+                                        }
+                                        if (moviesnotwatched.isEmpty()) out.println("404");
+                                        if (flag == 1) {
+                                            stmt.executeUpdate("UPDATE movietable set " + username + "=\"Y\" where MovieName=\"" + randomMovie + "\"");
+                                        }
                                     }
                                 }
+                                break;
                             }
-
                         }
-                    }
-                    // Username didn't match
-                    else {
-                        out.println("0");
+                        // Username didn't match
+                        else {
+                            out.println("0");
+                        }
                     }
                 }
                 // Sign Up Case
