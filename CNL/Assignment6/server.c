@@ -48,33 +48,74 @@ int main(int argc, char const *argv[]) {
 
     if(newsockfd < 0)
     error("Error accepting");
-
-    while(1){
-        bzero(buffer,255);
-        n = read(newsockfd,buffer,255);
-        if(n<0)
+    if(portno==9890){
+        while(1){
+            bzero(buffer,255);
+            n = read(newsockfd,buffer,255);
+            if(n<0)
             error("Error on reading");
-        printf("Client: %s\n",buffer);
-        bzero(buffer,255);
-        fgets(buffer,255,stdin);  // Reading from the server terminal
-        n = write(newsockfd,buffer,strlen(buffer));
-        if(n<0)
+            printf("Client: %s\n",buffer);
+            bzero(buffer,255);
+            fgets(buffer,255,stdin);  // Reading from the server terminal
+            n = write(newsockfd,buffer,strlen(buffer));
+            if(n<0)
             error("Error on writing\n");
-        int i = strncmp("bye",buffer,3);
-        if (i==0)
+            int i = strncmp("bye",buffer,3);
+            if (i==0)
             break;
+        }
+    }
+    if(portno=9891){
 
     }
-    close(newsockfd);
+    if(portno=9892){
+        printf("It's here alright\n");
+        int num1,num2,answer,choice;
+        char choices[5][15]={"Addition","Subtraction","Multiplication","Division","Exit"};
+
+S:        n = write(newsockfd,"Enter number 1: ",strlen("Enter number 1: "));
+        if(n<0)
+            error("Error on writing\n");
+        read(newsockfd,&num1,sizeof(int));
+        printf("Client number 1 is: %d\n",num1);
+        n = write(newsockfd,"Enter number 2: ",strlen("Enter number 2: "));
+        if(n<0)
+            error("Error on writing\n");
+        read(newsockfd,&num2,sizeof(int));
+        printf("Client number 2 is: %d\n",num2);
+
+        n = write(newsockfd,"1. Addition\n2. Subtraction\n3. Multiplication\n4. Division\n5. Exit\n",
+                    strlen("1. Addition\n2. Subtraction\n3. Multiplication\n4. Division\5. Exit\n"));
+        if(n<0)
+            error("Error on writing\n");
+        read(newsockfd,&choice,sizeof(int));
+        printf("Client operation is: %s\n",choices[choice-1]);
+        switch (choice) {
+            case 1:
+                answer = num1+num2;
+                break;
+            case 2:
+                answer = num1-num2;
+                break;
+            case 3:
+                answer = num1*num2;
+                break;
+            case 4:
+                answer = num1/num2;
+                break;
+            case 5:
+                goto Q;
+                break;
+
+        }
+        write(newsockfd,&answer,sizeof(int));
+        if(choice!=5){
+            goto S;
+        }
+
+
+    }
+Q:    close(newsockfd);
     close(sockfd);
-
-
-
-
-
-
-
-
-
     return 0;
 }
