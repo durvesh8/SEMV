@@ -75,6 +75,7 @@ public class ClientHandler implements Runnable {
                                         break;
                                     } else if (clientresp.equals("x")) {
                                         stmt.executeUpdate("ALTER TABLE movietable drop column " + username + ";");
+                                        stmt.executeUpdate("delete from users where username=\""+username+"\";");
                                         break;
                                     }
                                     // Rewatch Case
