@@ -49,7 +49,7 @@ public class ClientHandler implements Runnable {
                 }
                 // Log In request
                 if (request.equals("1")) {
-                    while(true) {
+                    while (true) {
                         String username = in.readLine();
                         String password = in.readLine();
                         // Check if username exists
@@ -105,7 +105,7 @@ public class ClientHandler implements Runnable {
 
                                         if (moviesnotwatched.isEmpty()) out.println("404");
                                         else {
-out.println("1");
+                                            out.println("1");
                                             int index = new Random().nextInt(moviesnotwatched.size());
                                             randomMovie = moviesnotwatched.get(index);
                                             out.println(randomMovie);
@@ -128,7 +128,7 @@ out.println("1");
                 }
                 // Sign Up Case
                 if (request.equals("2")) {
-                    while(true) {
+                    while (true) {
                         String usernamesignup = in.readLine();
                         String passwordsignup = in.readLine();
                         if (usernames.contains(usernamesignup)) {
