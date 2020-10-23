@@ -73,7 +73,7 @@ public class ClientHandler implements Runnable {
                                     // Sign out case
                                     if (clientresp.equals("3")) {
                                         break;
-                                    } else if (clientresp.equals("x")) {
+                                    } else if (clientresp.equals("x")) { // Delete account case
                                         stmt.executeUpdate("ALTER TABLE movietable drop column " + username + ";");
                                         stmt.executeUpdate("delete from users where username=\""+username+"\";");
                                         break;
