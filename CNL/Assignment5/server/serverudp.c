@@ -21,6 +21,7 @@ for(int i=0;i<=100;i++){
 }
   struct sockaddr_in servaddr,cliaddr;
 
+//--------------------creation of socket---------------------
   sd = socket(AF_INET, SOCK_DGRAM, 0);
 
   if(sd==-1)
@@ -35,39 +36,49 @@ for(int i=0;i<=100;i++){
 
   bzero(&servaddr, sizeof(servaddr));
 
+// add the parameters
   servaddr.sin_family = AF_INET;
   servaddr.sin_addr.s_addr = INADDR_ANY;
   servaddr.sin_port = htons(8000);
   memset(&(servaddr.sin_zero),'\0',8);
+
+
+
+  //--------------------binding the socket-----------------------
   if ( bind(sd, (struct sockaddr *)&servaddr, sizeof(servaddr)) != 0 )
     printf("Not binded\n");
   else
     printf("Binded\n");
 
   len=sizeof(cliaddr);
-  
+
   int choice =1;
   while(1)
   {
   	char num;
 
+
+// receiving choice from client
   	recvfrom(sd,&num,sizeof(num),0,(struct sockaddr *)&cliaddr, &len);
-  	
-  	
+
+// converting the character to int
 	choice = num;
 
-	
+
 	switch(choice)
 	{
 		case 1:
+    // Text file
 			recvfrom(sd,fileName,1024,0,(struct sockaddr *)&cliaddr, &len);
   			printf("NAME OF TEXT FILE RECEIVED : %s\n",fileName);
 			FILE *fp;
   	 		printf("Contents in the received text file : \n");
+        // filebuffer saves the contents
   	 		recvfrom(sd,filebuffer,1024,0,(struct sockaddr *)&cliaddr, &len);
   	 		printf("%s\n",filebuffer);
   			int fsize=strlen(filebuffer);
 			fp=fopen(fileName,"w");
+      // writing to the file
   			if(fp)
   			{
  				fwrite(filebuffer, fsize, 1, fp);
@@ -81,12 +92,15 @@ for(int i=0;i<=100;i++){
   			fclose(fp);
   			break;
   		case 2:
+      // Audio File
   			recvfrom(sd,fileName,1024,0,(struct sockaddr *)&cliaddr, &len);
    			printf("NAME OF AUDIO FILE RECEIVED : %s\n",fileName);
    			FILE *afp;
    			int numbytes;
+
      			afp=fopen(fileName,"w");
      			size_t  afsize;
+          // receiving bytes
      			afsize=recvfrom(sd,aufile,700000,0,(struct sockaddr *)&cliaddr, &len);
      			if(afp)
      			{
@@ -100,14 +114,16 @@ for(int i=0;i<=100;i++){
      			memset(fileName, '\0', sizeof(fileName));
      			fclose(afp);
      			break;
-     		
+
      		case 3:
+        // Video File
      			recvfrom(sd,fileName,1024,0,(struct sockaddr *)&cliaddr, &len);
        			printf("VIDEO FILE NAME RECEIVED : %s\n",fileName);
        			FILE *vfp;
        			vfp=fopen(fileName,"w");
        			size_t  vfsize;
-       			vfsize=recvfrom(sd,vfile,100000,0,(struct sockaddr *)&cliaddr, &len);
+            // receiving bytes
+       			vfsize=recvfrom(sd,vfile,1000000,0,(struct sockaddr *)&cliaddr, &len);
 
        			if(vfp)
        			{
@@ -120,13 +136,13 @@ for(int i=0;i<=100;i++){
            		}
      			fclose(vfp);
      			break;
-     			
+
      		case 4:
+        // Exit case
   			close(sd);
-  			break;   		
-	
+  			break;
+
 	}
   }
   return(0);
 }
-

@@ -25,138 +25,157 @@ int main() {
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_port = htons(8000);
 	servaddr.sin_addr.s_addr = INADDR_ANY;
-// servaddr.sin_addr.s_addr=inet_addr("10.10.10.73");
+
 	int choice = 1;
-	
+
 	while(choice!=4)
 	{
 		printf("ENTER \n 1.TEXT \n 2.AUDIO \n 3.VIDEO\n4.EXIT");
 		scanf("%d",&choice);
-		
+
 		char num=choice;
-		
+
 		sendto(fd, &num, sizeof(num), 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr));
-		
+
 		switch(choice)
 		{
 			case 1:
-				printf("Enter text file name to send : \n");
-    				scanf("%s",fileName);
-    				sendto(fd, fileName, strlen(fileName), 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr));
+			// Text File
+			printf("Enter text file name to send : \n");
+			scanf("%s",fileName);
+			// Sending fileName
+			sendto(fd, fileName, strlen(fileName), 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr));
 
-    				FILE *fp;
-     				fp=fopen(fileName,"r");
+			FILE *fp;
+			fp=fopen(fileName,"r");
 
-     				if(fp)
-     				{
-    	 				printf("Reading file contents.\n");
-     					fseek(fp,0,SEEK_END);
-       					size_t file_size=ftell(fp);
-       					fseek(fp,0,SEEK_SET);
-      					if(fread(file_buffer,file_size,1,fp)<=0)
-         				{
-           					printf("Unable to copy file into buffer or empty file.\n");
-           					exit(1);
-         				}
-        			}
-        			else
-        			{
-    					printf("Cannot open file.\n");
-    	 				exit(0);
-    			 	}
-    				printf("FILE CONTENTS TO SEND : %s\n",file_buffer);
-    				if(sendto(fd, file_buffer,strlen(file_buffer), 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr))<0)
-    				{
-    	 				printf("FILE WAS NOT SENT\n");
-    				}
-    				else
-    				{
-    	 				printf("FILE SENT\n");
-    				}
-    				fclose(fp);
-    				break;
-    				
-    			case 2:
-    				printf("Enter audio file name to send : \n");
-    				scanf("%s",afileName);
-    				sendto(fd, afileName, strlen(afileName), 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr));
-				FILE *afp;
-				afp=fopen(afileName,"r");
-				fseek(afp,0,SEEK_END);
-				size_t  afsize=ftell(afp);
-				fseek(afp,0,SEEK_SET);
-
-				if(afp)
+			// Store contents in a variable
+			if(fp)
+			{
+				printf("Reading file contents.\n");
+				fseek(fp,0,SEEK_END);
+				// Finding out the size of the file
+				size_t file_size=ftell(fp);
+				fseek(fp,0,SEEK_SET);
+				if(fread(file_buffer,file_size,1,fp)<=0)
 				{
-	 			printf("Reading file contents.\n");
-	 				if(fread(aufile,afsize,1,afp)<=0)
-	         			{
-	           				printf("Unable to copy file into buffer or empty file.\n");
-	           				exit(1);
-	         			}
+					printf("Unable to copy file into buffer or empty file.\n");
+					exit(1);
 				}
-				else
-				{
-					printf("Could not read audio file.\n");
-					exit(0);
-				}
-				
-				if(sendto(fd, aufile, afsize, 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr))<0)
-				{
-	 				printf("FILE WAS NOT SENT\n");
-	    			}
-	    			else
-	    			{
-	    	 			printf("FILE SENT\n");
-	    			}
-				fclose(afp);
-				break;
-				
-			case 3:
-				printf("Enter video file name to send : \n");
-    				scanf("%s",vfileName);
-				sendto(fd, vfileName, strlen(vfileName), 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr));
-				FILE *vfp;
-				vfp=fopen(vfileName,"r");
-
-				fseek(vfp, 0, SEEK_END);
-				size_t vfsize = ftell(vfp);
-				fseek(vfp, 0, SEEK_SET);
-
-				if(vfp)
-				{
-					if(fread(vfile, 1, vfsize, vfp)<=0)
-					{
-						printf("No contents or error reading file \n");
-					}
-				}
-				else
-				{
-					printf("Could not read audio file.\n");
-					exit(0);
-				}
-				if(sendto(fd, vfile, vfsize, 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr))<0)
-				{ 
+			}
+			else
+			{
+				printf("Cannot open file.\n");
+				exit(0);
+			}
+			printf("FILE CONTENTS TO SEND : %s\n",file_buffer);
+			// Sending contents
+			if(sendto(fd, file_buffer,strlen(file_buffer), 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr))<0)
+			{
 				printf("FILE WAS NOT SENT\n");
-				}
-				else
+			}
+			else
+			{
+				printf("FILE SENT\n");
+			}
+			fclose(fp);
+			break;
+
+
+
+
+
+			case 2:
+			// Audio File
+			printf("Enter audio file name to send : \n");
+			scanf("%s",afileName);
+			sendto(fd, afileName, strlen(afileName), 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr));
+			FILE *afp;
+			afp=fopen(afileName,"r");
+			fseek(afp,0,SEEK_END);
+			size_t  afsize=ftell(afp);
+			fseek(afp,0,SEEK_SET);
+
+			if(afp)
+			{
+				printf("Reading file contents.\n");
+				if(fread(aufile,afsize,1,afp)<=0)
 				{
-	 				printf("FILE SENT\n");
+					printf("Unable to copy file into buffer or empty file.\n");
+					exit(1);
 				}
-				fclose(vfp);
-				break;
-		
+			}
+			else
+			{
+				printf("Could not read audio file.\n");
+				exit(0);
+			}
+
+			if(sendto(fd, aufile, afsize, 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr))<0)
+			{
+				printf("FILE WAS NOT SENT\n");
+			}
+			else
+			{
+				printf("FILE SENT\n");
+			}
+			fclose(afp);
+			break;
+
+
+
+
+
+			case 3:
+			// Video File
+			printf("Enter video file name to send : \n");
+			scanf("%s",vfileName);
+			sendto(fd, vfileName, strlen(vfileName), 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr));
+			FILE *vfp;
+			vfp=fopen(vfileName,"r");
+
+			fseek(vfp, 0, SEEK_END);
+			size_t vfsize = ftell(vfp);
+			fseek(vfp, 0, SEEK_SET);
+
+			if(vfp)
+			{
+				if(fread(vfile, 1, vfsize, vfp)<=0)
+				{
+					printf("No contents or error reading file \n");
+				}
+			}
+			else
+			{
+				printf("Could not read audio file.\n");
+				exit(0);
+			}
+			if(sendto(fd, vfile, vfsize, 0,(struct sockaddr *)&servaddr, sizeof(struct sockaddr))<0)
+			{
+				printf("FILE WAS NOT SENT\n");
+			}
+			else
+			{
+				printf("FILE SENT\n");
+			}
+			fclose(vfp);
+			break;
+
+
+
+
+
 			case 4:
-				close(fd);
-				break;
-				
-		
-		
+			// Exit Case
+			close(fd);
+			break;
+
+
+
 		}
-		
-	
+
+
 	}
-	
+
 
 }
-
