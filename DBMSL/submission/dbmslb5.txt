@@ -1,0 +1,135 @@
+  > use doorways
+switched to db doorways
+> db.teachers.insertOne({name:"Paresh",qualification:"MTech",deptno:1,deptname:"computer",designation:"assistant professor",experience:12,salary:{basic:20000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("2008-06-01"),areaOfExpertise:"DBMS"})
+
+> db.teachers.insertOne({name:"Sarvadnya",qualification:"PhD",deptno:1,deptname:"computer",designation:"HOD",experience:20,salary:{basic:75000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("2000-06-01"),areaOfExpertise:"CN"})
+
+> db.teachers.insertOne({name:"Nilesh",qualification:"MTech",deptno:1,deptname:"computer",designation:"assistant professor",experience:10,salary:{basic:18000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("2010-06-01"),areaOfExpertise:"DBMS"})
+
+> db.teachers.insertOne({name:"Digvijay",qualification:"PhD",deptno:2,deptname:"IT",designation:"HOD",experience:18,salary:{basic:75000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("2002-06-01"),areaOfExpertise:"ML"})
+
+> db.teachers.insertOne({name:"Dhananjay",qualification:"ME",deptno:2,deptname:"IT",designation:"assistant professor",experience:15,salary:{basic:40000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("2005-06-01"),areaOfExpertise:"AI"})
+
+> db.teachers.insertOne({name:"Dipesh",qualification:"ME",deptno:2,deptname:"IT",designation:"assistant professor",experience:13,salary:{basic:60000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("2007-06-01"),areaOfExpertise:"ML"})
+
+> db.teachers.insertOne({name:"Ram",qualification:"PhD",deptno:3,deptname:"ENTC",designation:"HOD",experience:22,salary:{basic:80000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("1998-06-01"),areaOfExpertise:"Communication"})
+
+> db.teachers.insertOne({name:"Sham",qualification:"ME",deptno:3,deptname:"ENTC",designation:"assistant professor",experience:5,salary:{basic:25000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("2015-06-01"),areaOfExpertise:"Digital electronics"})
+
+> db.teachers.insertOne({name:"Anil",qualification:"ME",deptno:3,deptname:"ENTC",designation:"assistant professor",experience:8,salary:{basic:40000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("2012-06-01"),areaOfExpertise:"Digital electronics"})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 2. Find the information about all teachers
+
+
+> db.teachers.find()
+
+
+
+
+
+
+
+// 3. Find the information about all teachers of computer department
+
+
+
+
+> db.teachers.find({deptname:"computer"}).pretty()
+
+
+
+
+// 4. Find the information about all teachers of computer, IT & first year departments
+>
+
+
+> db.teachers.find({deptname:{$in:["computer","IT","ENTC"]}}).pretty()
+
+
+// 5. Find the information about all teachers of computer, IT and E&TC department having salary in between 70,000 and 1,00,000 (inclusive)
+
+
+
+> db.teachers.find({$and:[{"salary.basic":{$gte:70000}},{"salary.basic":{$lte:100000}},{deptname:{$in:["computer","IT","ENTC"]}}]}).pretty()
+
+
+
+
+
+// 6. Update the experience of any teacher to 10 years and if the entry is not available in database consider the entry as new entry (use update function only)
+
+
+
+> db.teachers.update({name:"Digvijay"},{$set:{experience:10}},{upsert:true})
+
+> db.teachers.find({name:"Digvijay"}).pretty()
+
+
+// 7. Find the teachers’ name and experience & arrange in decreasing order of experience
+
+
+
+> db.teachers.find({},{name:1,experience:1}).sort({experience:-1}).pretty()
+
+// 8. Use save() method to insert one entry in teachers collection
+
+
+
+> db.teachers.save({_id: ObjectId("5fa161eec75635cd6451dbc0"),name:"Sundar",qualification:"MTech",deptno:1,deptname:"computer",designation:"assistant professor",experience:14,salary:{basic:45000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("2006-06-01"),areaOfExpertise:"DBMS"})
+> db.teachers.find({name:"Sundar"}).pretty()
+
+
+
+
+// 9. Using save() method change the designation of any applicable teacher to Professor
+> db.teachers.save({_id:ObjectId("5fa161eec75635cd6451dbc0"),name:"Sham",qualification:"ME",deptno:3,deptname:"ENTC",designation:"professor",experience:5,salary:{basic:25000,TA:1000,DA:1000,HRA:2000},date_of_joining:new Date("2015-06-01"),areaOfExpertise:"Digital electronics",appointment:"adhoc"})
+
+
+
+
+
+
+
+// 10. Delete the documents from teachers collection having adhoc appointment.
+
+
+> db.teachers.deleteMany({appointment:"adhoc"})
+
+
+
+// 11. Display with pretty() method, the first 3 documents in teachers collection in ascending order of experience
+> db.teachers.find().sort({experience:1}).limit(3).pretty()
+
+
+
+
+
+
+
+
+
+// Additional queries
+// Sorting HOD salaries in descending order
+> db.teachers.find({"designation":"HOD"}).sort({"salary.basic":-1}).pretty()
+
+// Sorting all the teachers' salaries in ascending order of salary.TA
+> db.teachers.find({},{name:1,salary:1}).sort({"salary.TA":1})
