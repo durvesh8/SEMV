@@ -9,8 +9,8 @@ int main() {
 	string value, sr_no,time,source,destination,info,protocol,len;
 	int count=-1,i=0;
 
-	int choice;
-	do
+	int choice=0;
+	while(choice!=5)	
 	{
 		ifstream file("data.csv");
 		count=-1;
@@ -19,17 +19,16 @@ int main() {
 	cout<<"1.IP\n2.UDP\n3.TCP\n4.Ethernet\n5.Exit!!!\nChoice:";
 	cin>>choice;
 	string protocolChoice; 
-	switch(choice){
-	case 1: protocolChoice="ICMPv6";
+	string[] protocolChoices=["ICMPv6","UDP","TCP","ARP"];
+	if (choice>5 || choice<1){
+		protocolChoice = "ARP";
+	}
+	else if(choice==5){
 	break;
-	case 2: protocolChoice="UDP";
-	break;
-	case 3: protocolChoice="TCP";
-	break;
-	case 4: protocolChoice="ARP";
-	break;
-	default: protocolChoice="ARP";
-	break;
+
+	}
+	else{
+		protocolChoice = protocolChoices[choice-1];
 	}
 	while(file.good()) 
 	{
