@@ -56,7 +56,7 @@ int main() {
 	}
 	file.close();
 	cout<<"\nTotal Packet Count: "<<count<<endl;
-	}while(choice!=5);
+	};
 	return 0;
 }
 
