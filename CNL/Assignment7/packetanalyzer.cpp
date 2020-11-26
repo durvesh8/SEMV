@@ -5,12 +5,12 @@
 using namespace std;
 
 int main() {
-	cout << "***** PACKET ANALYZER *****" << endl; 
+	cout << "-------------PACKET ANALYZER----------" << endl; 
 	string value, sr_no,time,source,destination,info,protocol,len;
 	int count=-1,i=0;
 
-	int choice=0;
-	while(choice!=5)	
+	int choice;
+	do
 	{
 		ifstream file("data.csv");
 		count=-1;
@@ -19,16 +19,20 @@ int main() {
 	cout<<"1.IP\n2.UDP\n3.TCP\n4.Ethernet\n5.Exit!!!\nChoice:";
 	cin>>choice;
 	string protocolChoice; 
-	string[] protocolChoices=["ICMPv6","UDP","TCP","ARP"];
-	if (choice>5 || choice<1){
-		protocolChoice = "ARP";
-	}
-	else if(choice==5){
+	switch(choice){
+	case 1: protocolChoice="ICMPv6";
 	break;
-
+	case 2: protocolChoice="UDP";
+	break;
+	case 3: protocolChoice="TCP";
+	break;
+	case 4: protocolChoice="ARP";
+	break;
+	default: protocolChoice="ARP";
+	break;
 	}
-	else{
-		protocolChoice = protocolChoices[choice-1];
+	if(choice==5){
+	break;
 	}
 	while(file.good()) 
 	{
@@ -56,7 +60,7 @@ int main() {
 	}
 	file.close();
 	cout<<"\nTotal Packet Count: "<<count<<endl;
-	};
+	}while(choice!=5);
 	return 0;
 }
 
