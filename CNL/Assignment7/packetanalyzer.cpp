@@ -5,7 +5,7 @@
 using namespace std;
 
 int main() {
-	cout << "***** PACKET ANALYZER *****" << endl; 
+	cout << "-------------PACKET ANALYZER----------" << endl; 
 	string value, sr_no,time,source,destination,info,protocol,len;
 	int count=-1,i=0;
 
@@ -29,6 +29,9 @@ int main() {
 	}
 	else{
 		protocolChoice = protocolChoices[choice-1];
+	}
+	if(choice==5){
+	break;
 	}
 	while(file.good()) 
 	{
